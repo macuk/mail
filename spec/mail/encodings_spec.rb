@@ -130,6 +130,14 @@ describe Mail::Encodings do
       expect(Mail::Encodings.value_decode(string)).to eq result
     end
 
+    it "should encode and decode really long string" do
+      string = 'This is あ really long string This is あ really long string'
+      string.force_encoding('UTF-8') if RUBY_VERSION >= '1.9'
+      result = '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZw==?='
+      expect(Mail::Encodings.b_value_encode(string)).to eq result
+      expect(Mail::Encodings.b_value_decode(result)).to eq string
+    end
+
     it "should decode a long encoded string" do
       string = '=?UTF-8?B?VGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GCIHJl?= =?UTF-8?B?YWxseSBsb25nIHN0cmluZyBUaGlzIGlzIOOBgiByZWFsbHkgbG9uZyBzdHJp?= =?UTF-8?B?bmcgVGhpcyBpcyDjgYIgcmVhbGx5IGxvbmcgc3RyaW5nIFRoaXMgaXMg44GC?= =?UTF-8?B?IHJlYWxseSBsb25nIHN0cmluZw==?='
       result = "This is あ really long string This is あ really long string This is あ really long string This is あ really long string This is あ really long string"
